@@ -61,13 +61,31 @@ class AviaSoulsTest {
         Assertions.assertArrayEquals(expected, tickets);
     }
 
-    // Вывод поиска билетов по маршруту по умолчанию в порядке увеличения стоимости билетов
+    // Вывод поиска одного билета через search
+    @Test
+    public void shouldSearchOneTicket(){
+        setup();
+
+        Ticket[] expected = {ticket3};
+        Assertions.assertArrayEquals(expected, manager.search("Moscow", "Murmansk"));
+    }
+
+    // Вывод поиска нескольких билетов по маршруту по умолчанию в порядке увеличения стоимости билетов через search
     @Test
     public void shouldSearchAndSortOfDefault() {
         setup();
 
         Ticket[] expected = {ticket5, ticket4};
         Assertions.assertArrayEquals(expected, manager.search("Moscow", "Ufa"));
+    }
+
+    //Вывод отсутствия совпадений
+    @Test
+    public void shouldSearchNotFound(){
+        setup();
+
+        Ticket[] expected = {};
+        Assertions.assertArrayEquals(expected, manager.search("Kazan", "Ufa"));
     }
 
     // Сравнение билетов через Compare
@@ -78,12 +96,33 @@ class AviaSoulsTest {
         Assertions.assertEquals(0, manager.compare(ticket1, ticket2));  // время в пути одинаковое
     }
 
+    // Вывод поиска одного билета с сортировкой
     @Test
-    public void test() {
+    public void shouldSearchAndSortByOneTicket(){
+        setup();
+        TicketTimeComparator comparator = new TicketTimeComparator();
+
+        Ticket[] expected = {ticket1};
+        Assertions.assertArrayEquals(expected, manager.searchAndSortBy("Moscow", "Kaliningrad", comparator));
+    }
+
+    // Вывод поиска и сортировки нескольких билетов
+    @Test
+    public void souldSearchAndSortBy() {
         setup();
         TicketTimeComparator comparator = new TicketTimeComparator();
 
         Ticket[] expected = {ticket4, ticket5};
         Assertions.assertArrayEquals(expected, manager.searchAndSortBy("Moscow", "Ufa", comparator));
+    }
+
+    // Вывод отсутствия совпадений при поиске с сортировкой
+    @Test
+    public void souldSearchAndSortNotFound() {
+        setup();
+        TicketTimeComparator comparator = new TicketTimeComparator();
+
+        Ticket[] expected = {};
+        Assertions.assertArrayEquals(expected, manager.searchAndSortBy("Kazan", "Ufa", comparator));
     }
 }
